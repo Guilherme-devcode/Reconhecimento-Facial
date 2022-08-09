@@ -1,23 +1,36 @@
 .App{
   display: flex;
   flex-direction: column;
+  position: relative;
+  justify-content: center;
 }
 canvas{
   position: absolute;
   top: 60px;
-  left: 0;
+  left: 15vw;
+  display: block;
+  margin: 0 auto;
+}
+.content{
+	margin-top: 30%;
+}
+video{
+  position: absolute;
+  top: 0px;
+  left: 15vw;
+  display: block;
+  margin: 0 auto;
 
 }
 .container{
   position: relative;
   width: 100vw;
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: #0099CC;
 }
-video{
-  position: absolute;
-  left: 0;
-  top: 0;
-}
+
 #menu {
 	background: #0099CC;
 	background: linear-gradient(to bottom,  #000000,  #15343D);

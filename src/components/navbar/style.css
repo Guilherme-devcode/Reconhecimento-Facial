@@ -1,0 +1,29 @@
+header{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.logo{
+    max-width: 90px;
+
+}
+.navigation{
+    display: flex;
+}
+
+.navigation li{
+    list-style: none;
+}
+.navigation li a{
+    position: relative;
+    color: #fff;
+    text-decoration: none;
+    margin-left: 40px;
+}

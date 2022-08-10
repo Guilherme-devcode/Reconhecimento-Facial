@@ -1,7 +1,8 @@
 import './App.css';
-import Navbar from './components/navbar';
-import FaceIndentify from './components/FaceIndentify';
-import SendFile from './components/SendFile';
+import FaceIndentify from './components/faceidentify/FaceIndentify';
+import Home from './components/home/Home';
+import Navbar from './components/navbar/Navbar';
+import SendFile from './components/sendfile/SendFile';
 
 
 
@@ -10,10 +11,9 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      <FaceIndentify />
-      <div className='content'>
-        <SendFile />
-      </div>
+      <Home/>
+      {/* <FaceIndentify />
+      <SendFile /> */}
     </div>
 
   );

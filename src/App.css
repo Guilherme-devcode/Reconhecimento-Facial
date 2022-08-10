@@ -1,13 +1,14 @@
-.App{ 
-	position: relative;
-	min-height: 100vh;
-	background: linear-gradient(128deg, rgba(108,70,147,1) 16%, rgba(8,32,102,1) 72%);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
+.App {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(128deg, rgba(108, 70, 147, 1) 16%, rgba(8, 32, 102, 1) 72%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
-canvas{
+
+canvas {
   position: absolute;
   top: 60px;
   left: 15vw;
@@ -15,11 +16,25 @@ canvas{
   margin: 0 auto;
 }
 
-video{
+video {
   position: absolute;
   top: 0px;
   left: 15vw;
   display: block;
   margin: 0 auto;
+}
 
+@media (max-width:991px) {
+  .main{
+    padding: 40px;
+  }
+  header{
+    padding: 20px 40px;
+  }
+}
+@media (max-width:480px) {
+  header,
+  .main{
+    padding: 20px;
+  }
 }

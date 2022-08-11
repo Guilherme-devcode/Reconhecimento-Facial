@@ -100,11 +100,6 @@ function FaceIndentify() {
         autoPlay
         ref={videoRef}
         muted></video>
-      <canvas
-        width="940"
-        height="650"
-        ref={canvasRef}
-      />
     </div>
   )
 }

@@ -1,10 +1,12 @@
 import React from 'react'
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as faceapi from "face-api.js";
+import './style.css';
+
 
 function FaceIndentify() {
-  const canvasRef = useRef()
   const videoRef = useRef()
+
   const getVideo = async () => {
     await navigator.mediaDevices
       .getUserMedia({ video: { width: 300 } })
@@ -18,8 +20,10 @@ function FaceIndentify() {
       });
   };
 
+
+
   const loadLabels = () => {
-    const labels = ['Guilherme']
+    const labels = ['Guilherme', 'Cellbit', 'Michael']
     return Promise.all(labels.map(async label => {
       const descriptions = []
       for (let i = 1; i <= 3; i++) {
@@ -33,13 +37,13 @@ function FaceIndentify() {
     }))
   }
 
+
   const handleImage = async () => {
     await getVideo()
-
     setTimeout(async () => {
       const canvas = await faceapi.createCanvasFromMedia(videoRef.current)
       const labels = await loadLabels()
-      document.body.append(canvas)
+      // document.body.append(canvas)
       const displaySize = { width: videoRef.current.width, height: videoRef.current.height }
       faceapi.matchDimensions(canvas, displaySize)
       setInterval(async () => {
@@ -54,28 +58,37 @@ function FaceIndentify() {
         const results = resizedDetections.map(d =>
           faceMatcher.findBestMatch(d.descriptor)
         )
-        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
-        faceapi.draw.drawDetections(canvas, resizedDetections)
-        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
-        faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+        // canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+        // faceapi.draw.drawDetections(canvas, resizedDetections)
+        // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+        // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
         resizedDetections.forEach(detection => {
-          const { age, gender, genderProbality } = detection
-          new faceapi.draw.DrawTextField([
-            `${parseInt(age, 10)} years`,
-            `${gender} (${parseInt(genderProbality * 100, 10)})%`
-          ], detection.detection.box.topRight).draw(canvas)
+          // const { age, gender, genderProbality } = detection
+          // new faceapi.draw.DrawTextField([
+          //   `${parseInt(age, 10)} years`,
+          //   `${gender} (${parseInt(genderProbality * 100, 10)})%`
+          // ], detection.detection.box.topRight).draw(canvas)
+          // const name = `Você tem provavelmente ${parseInt(age, 10)} anos`
+          // document.getElementById("idade").innerHTML = name;
         })
         results.forEach((result, index) => {
-          const box = resizedDetections[index].detection.box
-          const { label, distance } = result
-          new faceapi.draw.DrawTextField([
-            `${label} (${distance})`
-          ], box.bottomRight).draw(canvas)
+          // const box = resizedDetections[index].detection.box
+          // const { label, distance } = result
+          // new faceapi.draw.DrawTextField([
+          //   `${label} (${distance})`
+          // ], box.bottomRight).draw(canvas)
+          if (result._label !== 'unknown') {
+            const name = `Olá ${result._label}`
+            document.getElementById("name").innerHTML = name;
+          } else {
+            const name = `Não detectado`
+            document.getElementById("name").innerHTML = name;
+          }
         })
       }, 50)
     }, 3000);
-
   }
+
   useEffect(() => {
     const loadModels = () => {
       Promise.all([
@@ -88,6 +101,7 @@ function FaceIndentify() {
 
       ]).then(handleImage)
         .catch((e) => console.log(e))
+
     }
     videoRef.current && loadModels()
   })
@@ -95,12 +109,16 @@ function FaceIndentify() {
     <div className="container">
       <video
         id='video'
+        className='video'
         width="940"
-        height="650"
+        height="450"
         autoPlay
         ref={videoRef}
-        muted></video>
-    </div>
+        muted>
+      </video>
+      <h2 id="name" className="name"></h2>
+      {/* <h2 id="idade"></h2> */}
+    </div >
   )
 }
 

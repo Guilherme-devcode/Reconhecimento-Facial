@@ -16,13 +16,7 @@ canvas {
   margin: 0 auto;
 }
 
-video {
-  position: absolute;
-  top: 0px;
-  left: 15vw;
-  display: block;
-  margin: 0 auto;
-}
+
 
 @media (max-width:991px) {
   .main{

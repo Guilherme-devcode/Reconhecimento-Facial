@@ -23,7 +23,7 @@ function FaceIndentify() {
 
 
   const loadLabels = () => {
-    const labels = ['Guilherme', 'Cellbit', 'Michael']
+    const labels = ['Guilherme', 'Cellbit', 'Michael', 'Thiago']
     return Promise.all(labels.map(async label => {
       const descriptions = []
       for (let i = 1; i <= 1; i++) {

@@ -25,7 +25,7 @@ function FaceIndentify() {
 
 
   const loadLabels = () => {
-    const labels = ['Guilherme', 'Cellbit', 'Michael', 'Thiago']
+    const labels = ['Guilherme', 'Michael', 'Thiago', 'Cata', 'Filipe', 'Arthur']
     return Promise.all(labels.map(async label => {
       const descriptions = []
       for (let i = 1; i <= 1; i++) {
@@ -91,7 +91,7 @@ function FaceIndentify() {
       }, 300)
       setActive(isActive = false);
     }, 3000);
-    
+
   }
 
   useEffect(() => {

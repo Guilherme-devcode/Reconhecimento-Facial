@@ -2,11 +2,13 @@ import React from 'react'
 import { useEffect, useRef, useState } from 'react';
 import * as faceapi from "face-api.js";
 import './style.css';
-
+import face from '../../assets/img/face.png'
+import { PuffLoader } from 'react-spinners';
 
 function FaceIndentify() {
   const videoRef = useRef()
-
+  const [loading, setLoading] = useState(true)
+  let [isActive, setActive] = useState(true);
   const getVideo = async () => {
     await navigator.mediaDevices
       .getUserMedia({ video: { width: 300 } })
@@ -63,7 +65,7 @@ function FaceIndentify() {
         // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
         // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
         resizedDetections.forEach(detection => {
-          // const { age, gender, genderProbality } = detection
+          const { age, gender, genderProbality } = detection
           // new faceapi.draw.DrawTextField([
           //   `${parseInt(age, 10)} years`,
           //   `${gender} (${parseInt(genderProbality * 100, 10)})%`
@@ -80,16 +82,22 @@ function FaceIndentify() {
           if (result._label !== 'unknown') {
             const name = `Olá ${result._label}`
             document.getElementById("name").innerHTML = name;
+
           } else {
             const name = `Não detectado`
             document.getElementById("name").innerHTML = name;
           }
         })
-      }, 50)
+      }, 300)
+      setActive(isActive = false);
     }, 3000);
+    
   }
 
   useEffect(() => {
+    setTimeout(() => {
+      setLoading(false)
+    }, 1000);
     const loadModels = () => {
       Promise.all([
         faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
@@ -98,26 +106,42 @@ function FaceIndentify() {
         faceapi.nets.faceExpressionNet.loadFromUri("/models"),
         faceapi.nets.ageGenderNet.loadFromUri("/models"),
         faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-
       ]).then(handleImage)
         .catch((e) => console.log(e))
-
     }
     videoRef.current && loadModels()
   })
   return (
     <div className="container">
-      <video
-        id='video'
-        className='video'
-        width="940"
-        height="450"
-        autoPlay
-        ref={videoRef}
-        muted>
-      </video>
-      <h2 id="name" className="name"></h2>
-      {/* <h2 id="idade"></h2> */}
+      {
+        loading ?
+          <PuffLoader color={'#fff'} loading={loading} size={100} />
+          :
+          <div className='content-face-id'>
+            <div className='text-face-id'>
+              <h2>Identificação facial</h2>
+              <span>Posicione seu rosto na demarcação</span>
+            </div>
+
+            <div className='video-content-id'>
+              <img
+                className={isActive ? "outline-face-id" : "outline-face-id active"}
+                src={face}>
+              </img>
+              <video
+                id='video'
+                className='video'
+                width="640"
+                height="350"
+                autoPlay
+                ref={videoRef}
+                muted>
+              </video>
+              <h3 id="name" className="name"></h3>
+              {/* <h2 id="idade"></h2> */}
+            </div>
+          </div>
+      }
     </div >
   )
 }

@@ -4,9 +4,13 @@ import * as faceapi from "face-api.js";
 import './style.css';
 import face from '../../assets/img/face.png'
 import { PuffLoader } from 'react-spinners';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getDatabase, getDetectedFaces, setDataBase } from '../../firebase';
 
 function FaceIndentify() {
   const videoRef = useRef()
+  const canvas = require("canvas");
+  const { Canvas, Image, ImageData } = canvas;
   const [loading, setLoading] = useState(true)
   let [isActive, setActive] = useState(true);
   const getVideo = async () => {
@@ -24,17 +28,18 @@ function FaceIndentify() {
 
 
 
-  const loadLabels = () => {
-    const labels = ['Guilherme', 'Michael', 'Thiago', 'Cata', 'Filipe', 'Arthur']
+  const loadLabels = async () => {
+
+    const result = await getDatabase("detectedPeople")
+    const labels = result.map(m => m.name)
     return Promise.all(labels.map(async label => {
       const descriptions = []
-      for (let i = 1; i <= 1; i++) {
-        const img = await faceapi.fetchImage(`/labels/${label}/${i}.PNG`)
-        const detections = await faceapi.detectSingleFace(img)
-          .withFaceLandmarks()
-          .withFaceDescriptor()
-        descriptions.push(detections.descriptor)
-      }
+      const img = await canvas.loadImage(`https://raw.githubusercontent.com/Guilherme-devcode/Reconhecimento-Facial/main/public/labels/${label}/1.PNG`);
+      img.crossOrigin = "anonymous";
+      const detections = await faceapi.detectSingleFace(img)
+        .withFaceLandmarks()
+        .withFaceDescriptor()
+      descriptions.push(detections.descriptor)
       return new faceapi.LabeledFaceDescriptors(label, descriptions)
     }))
   }
@@ -56,43 +61,63 @@ function FaceIndentify() {
           .withFaceDescriptors()
           .withAgeAndGender()
         const resizedDetections = faceapi.resizeResults(detections, displaySize)
-        const faceMatcher = new faceapi.FaceMatcher(labels, 0.6)
+        // ------ Aumenta a precisão da captura do rosto com a imagem da pessoa em 90%
+        const faceMatcher = new faceapi.FaceMatcher(labels, 0.9)
         const results = resizedDetections.map(d =>
           faceMatcher.findBestMatch(d.descriptor)
         )
+        //-----Desenhar linhas para detecção--------
         // canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
         // faceapi.draw.drawDetections(canvas, resizedDetections)
         // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
         // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
         resizedDetections.forEach(detection => {
           const { age, gender, genderProbality } = detection
-          // new faceapi.draw.DrawTextField([
-          //   `${parseInt(age, 10)} years`,
-          //   `${gender} (${parseInt(genderProbality * 100, 10)})%`
-          // ], detection.detection.box.topRight).draw(canvas)
-          // const name = `Você tem provavelmente ${parseInt(age, 10)} anos`
-          // document.getElementById("idade").innerHTML = name;
+          //----------Detectar idade e genero da pessoa---------- 
+          new faceapi.draw.DrawTextField([
+            `${parseInt(age, 10)} years`,
+            `${gender} (${parseInt(genderProbality * 100, 10)})%`
+          ], detection.detection.box.topRight).draw(canvas)
+
         })
-        results.forEach((result, index) => {
+        results.forEach(async (result, index) => {
+          // ------- Desenha um quadrado azul no rosto e as descrições da pessoa
           // const box = resizedDetections[index].detection.box
           // const { label, distance } = result
           // new faceapi.draw.DrawTextField([
           //   `${label} (${distance})`
           // ], box.bottomRight).draw(canvas)
-          if (result._label !== 'unknown') {
-            const name = `Olá ${result._label}`
-            document.getElementById("name").innerHTML = name;
 
-          } else {
+          // ------- Get do firebase com nome, tipo e id da pessoa 
+          const resultDb = await getDatabase("detectedPeople")
+          const labels = resultDb.find(label => label.name === result._label);
+          let dateLabel = labels.date
+          const fireBaseTime = new Date(
+            dateLabel.seconds * 1000 + dateLabel.nanoseconds / 1000000,
+          );
+          const date = fireBaseTime.toDateString();
+          const atTime = fireBaseTime.toLocaleTimeString();
+          var currentDate = new Date();
+          console.log(currentDate);
+          console.log(date, atTime);
+          if (labels?.type === 1) {
+            const name = `Seja bem vindo ${labels.name}`
+            document.getElementById("name").innerHTML = name;
+          } else if (labels?.type === 2) {
+            const name = `Volte sempre ${labels.name}`
+            document.getElementById("name").innerHTML = name;
+          } else if (labels === undefined) {
             const name = `Não detectado`
             document.getElementById("name").innerHTML = name;
           }
         })
-      }, 300)
+      }, 1000)
       setActive(isActive = false);
     }, 3000);
-
   }
+
+
+
 
   useEffect(() => {
     setTimeout(() => {
@@ -125,11 +150,13 @@ function FaceIndentify() {
 
             <div className='video-content-id'>
               <img
+                crossOrigin='anonymous'
                 className={isActive ? "outline-face-id" : "outline-face-id active"}
                 src={face}>
               </img>
               <video
                 id='video'
+                crossOrigin='anonymous'
                 className='video'
                 width="640"
                 height="350"

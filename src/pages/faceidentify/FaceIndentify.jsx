@@ -34,7 +34,7 @@ function FaceIndentify() {
     const labels = result.map(m => m.name)
     return Promise.all(labels.map(async label => {
       const descriptions = []
-      const img = await canvas.loadImage(`https://raw.githubusercontent.com/Guilherme-devcode/Reconhecimento-Facial/main/public/labels/${label}/1.PNG`);
+      const img = await canvas.loadImage(`https://raw.githubusercontent.com/Guilherme-devcode/Reconhecimento-Facial/main/public/labels/${label}/1.png`);
       img.crossOrigin = "anonymous";
       const detections = await faceapi.detectSingleFace(img)
         .withFaceLandmarks()

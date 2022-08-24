@@ -1,7 +1,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage"
-import { collection, getDocs, getFirestore, updateDoc } from "firebase/firestore";
+import { collection, getDocs, getFirestore, doc, setDoc, updateDoc, addDoc } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDiDz17XFvC199zB-QBkjf8rCFHUpmuMRo",
@@ -23,15 +23,26 @@ export const getDatabase = async (docRef) => {
     const result = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
     return result
 }
-export const setDataBase = async (docRef) => {
-    const collectionRef = collection(db, docRef)
-    const data = await updateDoc(collectionRef,{
-        name:'Thiago',
-        type:1,
-        date:1660848515,
-    })
-    console.log(data);
+
+
+
+export const setDataBase = async (id, type) => {
+    const userRef = doc(db, "detectedPeople", id);
+    await updateDoc(userRef, {
+        "type": type,
+    });
 }
+
+export const register = async (name, cpf, date) => {
+    const userRef = doc(db, "detectedPeople");
+    await addDoc(userRef, {
+        "name": name,
+        "CPF": cpf,
+        "date": date,
+        "type": 1,
+    });
+}
+
 
 
 

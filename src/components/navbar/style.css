@@ -48,6 +48,7 @@ header {
         top: 0;
         left: 0;
         width: 100%;
+        z-index: 10000;
         height: 100%;
         background: rgba(108, 70, 147, 1);
         display: flex;

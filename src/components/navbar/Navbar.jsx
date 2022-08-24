@@ -18,9 +18,9 @@ function Navbar() {
                 <a><img className='logo' src={LogotipoRed} ></img></a>
                 <div onClick={handleToggle} className={isActive ? "toggle" : "toggle active"}></div>
                 <ul className={isActive ? "navigation" : "navigation active"}>
-                    <li><Link to="/">Inicio</Link></li>
-                    <li><Link to="/check-in">Check-in</Link></li>
-                    {/* <li><Link to="/check-out">Check-out</Link></li> */}
+                    <li onClick={handleToggle}><Link to="/">Inicio</Link></li>
+                    <li onClick={handleToggle}><Link to="/check-in">Reconhecimento</Link></li>
+                    <li onClick={handleToggle}><Link to="/register">Cadastro</Link></li>
                     <li><a>Sair</a></li>
                 </ul>
             </header>

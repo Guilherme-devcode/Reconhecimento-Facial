@@ -4,6 +4,7 @@ import Home from './pages/home/Home';
 import Navbar from './components/navbar/Navbar';
 import SendFile from './components/sendfile/SendFile';
 import { Route, Routes } from 'react-router-dom';
+import FaceRegistration from './pages/faceRegistration/FaceRegistration';
 
 
 
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/check-in' element={<FaceIndentify />}/>
+        <Route path='/register' element={<FaceRegistration />}/>
       </Routes>
       {/* <FaceIndentify />
       <SendFile /> */}

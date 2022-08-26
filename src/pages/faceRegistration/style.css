@@ -6,7 +6,7 @@
     box-sizing: border-box;
 }
 
-form {
+.form-registration {
     width: 95%;
     background-color: rgba(255, 255, 255, 0.13);
     position: absolute;
@@ -21,7 +21,7 @@ form {
     padding: 50px 30%;
 }
 
-form * {
+.form-registration * {
     color: #000000;
     letter-spacing: 0.5px;
     outline: none;
@@ -29,12 +29,12 @@ form * {
 }
 
 @media (prefers-color-scheme: dark) {
-    form * {
+    .form-registration * {
         color: #ffffff;
     }
 }
 
-form h3 {
+.form-registration h3 {
     font-size: 32px;
     font-weight: 500;
     line-height: 42px;
@@ -42,21 +42,21 @@ form h3 {
 }
 
 @media (max-width:480px) {
-    form {
+    .form-registration {
         width: 400px;
         top: 50%;
         padding: 50px 35px;
     }
 }
 
-label {
+.label-registration {
     display: block;
     margin-top: 30px;
     font-size: 16px;
     font-weight: 500;
 }
 
-input {
+.input-registration  {
     display: block;
     height: 50px;
     width: 100%;
@@ -78,7 +78,7 @@ input {
     }
 }
 
-button {
+.button {
     margin-top: 50px;
     width: 100%;
     background-color: #ffffff;
@@ -88,6 +88,14 @@ button {
     font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
+    text-align: center;
+    transition: 0.25s;
+}
+
+.button:hover {
+    background: rgb(57, 19, 95);
+    color: white;
+    letter-spacing: 3px;
 }
 
 .social {
@@ -96,7 +104,6 @@ button {
 }
 
 .social div {
-    background: red;
     width: 150px;
     border-radius: 3px;
     padding: 5px 10px 10px 5px;

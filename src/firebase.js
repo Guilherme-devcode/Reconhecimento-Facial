@@ -1,7 +1,8 @@
 
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage"
-import { collection, getDocs, getFirestore, doc, setDoc, updateDoc, addDoc } from "firebase/firestore";
+import { collection, getDocs, getFirestore, doc, updateDoc} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDiDz17XFvC199zB-QBkjf8rCFHUpmuMRo",
@@ -15,7 +16,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-const db = getFirestore(app)
+export const db = getFirestore(app)
+export const auth = getAuth();
 
 export const getDatabase = async (docRef) => {
     const collectionRef = collection(db, docRef)
@@ -30,16 +32,6 @@ export const setDataBase = async (id, type) => {
     const userRef = doc(db, "detectedPeople", id);
     await updateDoc(userRef, {
         "type": type,
-    });
-}
-
-export const register = async (name, cpf, date) => {
-    const userRef = doc(db, "detectedPeople");
-    await addDoc(userRef, {
-        "name": name,
-        "CPF": cpf,
-        "date": date,
-        "type": 1,
     });
 }
 

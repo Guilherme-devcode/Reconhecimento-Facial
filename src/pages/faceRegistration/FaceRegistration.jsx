@@ -1,27 +1,35 @@
-import React, {  useEffect, useState } from 'react'
-import { register } from '../../firebase';
+import { addDoc, collection, getFirestore } from 'firebase/firestore';
+import React, { useState } from 'react'
+import { app } from '../../firebase';
 import './style.css';
 
 function FaceRegistration() {
     const [cpf, setCpf] = useState("");
     const [name, setName] = useState("");
 
+    const db = getFirestore(app)
+    const userCollectionRef = collection(db, 'people')
 
-    const sendData = async () => {
-        await register(name, cpf)
+    async function createUser() {
+        await addDoc(userCollectionRef, {
+            name,
+            cpf,
+            "type": 1,
+            "date": Date.now()
+        })
     }
 
     return (
-        <div>
-            <form>
+        <div className='face-registration'>
+            <form className='form-registration'>
                 <h3>Cadastro Facial</h3>
-                <label for="name">Nome completo</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nome completo" id="name"></input>
+                <label className='label-registration' htmlFor='name'>Nome completo</label>
+                <input className='input-registration' type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nome completo" id="name"></input>
 
-                <label for="cpf">CPF</label>
-                <input type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} placeholder="CPF" id="cpf"></input>
+                <label className='label-registration' htmlFor="cpf">CPF</label>
+                <input className='input-registration' type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} placeholder="CPF" id="cpf"></input>
 
-                <button onClick={sendData}>Enviar</button>
+                <div onClick={createUser} className='button'>Enviar</div>
             </form >
         </div>
     )

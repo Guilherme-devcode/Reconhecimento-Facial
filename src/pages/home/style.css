@@ -41,6 +41,7 @@
 
 .btn:hover {
     letter-spacing: 2px;
+    text-decoration: none;
 }
 
 .face-id {

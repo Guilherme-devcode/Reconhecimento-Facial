@@ -1,0 +1,109 @@
+.login {
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+}
+
+.image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.image img {
+    border: 5px solid black;
+    padding: 50px;
+    border-radius: 20%;
+    max-width: 300px;
+    filter: invert(100%);
+}
+
+.sign-in {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex: 1;
+    background: white;
+}
+
+.header-login {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header-login img {
+    max-width: 80px;
+    margin-right: 20px;
+}
+
+h1 {
+    font-size: 3.5rem;
+}
+
+.form-login {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-login[type="email"],
+.input-login[type="password"] {
+    padding: 10px;
+    font-size: 1.2rem;
+    border: none;
+    border-bottom: solid 1px #000;
+    outline: none;
+}
+
+.input-login[type="email"]::placeholder,
+.input-login[type="password"]::placeholder {
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+}
+
+.input-login[type="email"]:hover::placeholder,
+.input-login[type="password"]:hover::placeholder {
+    color: #000;
+}
+
+.sign-in button {
+    background-color: #000;
+    color: #fff;
+    padding: 10px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    margin-top: 30px;
+}
+
+.sign-in button:hover {
+    background-color: #eee;
+    color: #000;
+}
+
+a {
+    color: #424242;
+    text-decoration: none;
+    align-self: flex-end;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+::selection {
+    color: #fff;
+    background-color: #000;
+}
+
+@media screen and (max-width: 786px) {
+    .image {
+        display: none;
+    }
+}

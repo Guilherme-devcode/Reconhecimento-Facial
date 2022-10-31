@@ -99,14 +99,15 @@ function FaceRegistration() {
                             <KeyboardBackspaceIcon style={{ fill: "white" }} />
                         </div>
                         <Camera
-                            idealFacingMode={FACING_MODES.ENVIRONMENT}
+                            idealFacingMode={FACING_MODES.USER}
                             isImageMirror={false}
                             isFullScreen={true}
                             isMaxResolution={true}
-                            // idealResolution={{
-                            //     width: 800,
-                            //     height: 800
-                            // }}
+                            idealResolution={{
+                                width: 800,
+                                height: 800
+                            }}
+                            
                             sizeFactor={0.3}
                             onTakePhoto={(dataURI) => {
                                 setdataURI(dataURI);

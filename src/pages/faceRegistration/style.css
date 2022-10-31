@@ -179,7 +179,7 @@
     border: 1px solid #080710;
   }
   .camera-container .react-html5-camera-photo {
-    transform: scale(4.5) !important;
+    /* transform: scale(4.5) !important; */
   }
   .camera-container .title-camera {
     position: absolute;
@@ -204,8 +204,8 @@
     border-radius: 30px !important;
   }
   .camera-container #container-circles {
-    transform: scale(-0.3) !important;
-    bottom: 4em !important;
+    /* transform: scale(-0.3) !important; */
+    /* bottom: 4em !important; */
   }
   .back-button {
     opacity: 1 !important;

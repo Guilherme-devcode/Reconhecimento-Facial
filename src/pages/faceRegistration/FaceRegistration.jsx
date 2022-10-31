@@ -101,7 +101,7 @@ function FaceRegistration() {
                         <Camera
                             idealFacingMode={FACING_MODES.USER}
                             isImageMirror={false}
-                            isFullScreen={true}
+                            isFullScreen={false}
                             isMaxResolution={true}
                             idealResolution={{
                                 width: 800,

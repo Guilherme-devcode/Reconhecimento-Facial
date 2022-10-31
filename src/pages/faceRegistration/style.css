@@ -150,8 +150,7 @@
   .camera-container {
     width: 400px !important ;
     position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
+    right: 0 !important;
   }
   .list-imgs {
     position: absolute;
@@ -179,17 +178,8 @@
     color: #080710;
     border: 1px solid #080710;
   }
-  .camera-container .react-html5-camera-photo{
-    /* width: 100vw !important;
-    position: absolute;
-    left: 0;
-    height: 100vh !important; */
-    /* transform: scale(4.5) !important; */
-    width: 100vw;
-    height: 100vh;
-  }
-  .camera-container .react-html5-camera-photo video{
-    height: 100% !important;
+  .camera-container .react-html5-camera-photo {
+    transform: scale(4.5) !important;
   }
   .camera-container .title-camera {
     position: absolute;
@@ -201,8 +191,8 @@
   }
 
   .submit-img-container {
-    /* padding-left: 20px;
-    padding-right: 20px; */
+    padding-left: 20px;
+    padding-right: 20px;
     position: absolute;
     width: 100%;
     top: 19em;
@@ -214,8 +204,8 @@
     border-radius: 30px !important;
   }
   .camera-container #container-circles {
-    /* transform: scale(-0.3) !important; */
-    /* bottom: 4em !important; */
+    transform: scale(-0.3) !important;
+    bottom: 4em !important;
   }
   .back-button {
     opacity: 1 !important;
@@ -241,12 +231,9 @@
   max-width: 130px;
 }
 
-
-
 .camera-container .title-camera h3 {
   color: white;
 }
-
 .back-button {
   opacity: 0;
 }

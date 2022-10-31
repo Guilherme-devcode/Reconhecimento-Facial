@@ -107,7 +107,6 @@ function FaceRegistration() {
                                 width: 800,
                                 height: 800
                             }}
-                            
                             sizeFactor={0.3}
                             onTakePhoto={(dataURI) => {
                                 setdataURI(dataURI);

@@ -185,6 +185,8 @@
     left: 0;
     height: 100vh !important; */
     /* transform: scale(4.5) !important; */
+    width: 100vw;
+    height: 100vh;
   }
   .camera-container .react-html5-camera-photo video{
     height: 100% !important;

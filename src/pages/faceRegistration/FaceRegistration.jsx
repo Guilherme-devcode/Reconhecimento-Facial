@@ -103,10 +103,10 @@ function FaceRegistration() {
                             isImageMirror={false}
                             isFullScreen={true}
                             isMaxResolution={true}
-                            idealResolution={{
-                                width: 800,
-                                height: 800
-                            }}
+                            // idealResolution={{
+                            //     width: 800,
+                            //     height: 800
+                            // }}
                             sizeFactor={0.3}
                             onTakePhoto={(dataURI) => {
                                 setdataURI(dataURI);

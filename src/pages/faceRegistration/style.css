@@ -180,10 +180,10 @@
     border: 1px solid #080710;
   }
   .camera-container .react-html5-camera-photo{
-    width: 100vw !important;
+    /* width: 100vw !important;
     position: absolute;
     left: 0;
-    height: 100vh !important;
+    height: 100vh !important; */
     /* transform: scale(4.5) !important; */
   }
   .camera-container .react-html5-camera-photo video{
@@ -199,8 +199,8 @@
   }
 
   .submit-img-container {
-    padding-left: 20px;
-    padding-right: 20px;
+    /* padding-left: 20px;
+    padding-right: 20px; */
     position: absolute;
     width: 100%;
     top: 19em;

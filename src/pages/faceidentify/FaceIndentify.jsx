@@ -20,29 +20,59 @@ function FaceIndentify() {
 
 
 
-  const getVideo = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 300 } })
-    let video = videoRef.current;
-    video.srcObject = await stream;
-    await video.play();
-    await handleImage()
-    await setLoading(false)
 
+  const getVideo = async (isRecognized) => {
+    if (isRecognized === false) {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 300 } })
+      let video = videoRef.current;
+      video.srcObject = await stream;
+      await video.play();
+      await handleImage()
+      await setLoading(false)
+    } else {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 300 } })
+      let video = videoRef.current;
+      video.srcObject = await stream;
+      await video.play();
+    }
+  };
+
+
+  const stopVideo = async () => {
+
+    var videoEl = videoRef.current;
+    // now get the steam 
+    const stream = videoEl.srcObject;
+    // now get all tracks
+    const tracks = stream.getTracks();
+    // now close each track by having forEach loop
+    if (tracks) {
+      tracks.forEach(function (track) {
+        // stopping every track
+        track.stop();
+      });
+      // assign null to srcObject of video
+      videoEl.srcObject = null;
+    }
   };
 
 
 
   const loadLabels = async () => {
-    const result = await getDatabase("detectedPeople")
+    const result = await getDatabase("people")
+    const storage = getStorage();
     const labels = result.map(m => m.name)
     return Promise.all(labels.map(async label => {
-      const descriptions = []
-      const img = await fetchImage(`https://raw.githubusercontent.com/Guilherme-devcode/Reconhecimento-Facial/main/public/labels/${label}/1.png`);
-      const detections = await faceapi.detectSingleFace(img)
-        .withFaceLandmarks()
-        .withFaceDescriptor()
-      descriptions.push(detections.descriptor)
-      return new faceapi.LabeledFaceDescriptors(label, descriptions)
+      for (let i = 1; i <= 3; i++) {
+        const url = await getDownloadURL(ref(storage, `${label}/${i}.png`))
+        const descriptions = []
+        const img = await fetchImage(url);
+        const detections = await faceapi.detectSingleFace(img)
+          .withFaceLandmarks()
+          .withFaceDescriptor()
+        descriptions.push(detections.descriptor)
+        return new faceapi.LabeledFaceDescriptors(label, descriptions)
+      }
     }))
 
   }
@@ -66,11 +96,11 @@ function FaceIndentify() {
       .withAgeAndGender()
     const resizedDetections = faceapi.resizeResults(detections, displaySize)
     // ------ Adicionando mais um paramentro com numero na função faceMatcher vai limitar a similaridade do rosto da webcam com a foto
-    const faceMatcher = new faceapi.FaceMatcher(labels)
+    const faceMatcher = new faceapi.FaceMatcher(labels, 0.5)
     const results = resizedDetections.map(d =>
       faceMatcher.findBestMatch(d.descriptor)
     )
-    setTypes(results)
+    await setTypes(results)
   }
 
   const setTypes = async (results) => {
@@ -88,11 +118,12 @@ function FaceIndentify() {
         handleImage()
       }
       setTimeout(async () => {
-        const resultDb = await getDatabase("detectedPeople")
+        const resultDb = await getDatabase("people")
         const labels = resultDb.find(label => label.name === result?._label);
         let typeLabel = labels?.type;
         switch (typeLabel) {
           case 1:
+            await stopVideo()
             const name = `Seja bem vindo ${result?._label}`
             document.getElementById("name").innerHTML = name;
             let element = document.getElementById("name");
@@ -100,11 +131,15 @@ function FaceIndentify() {
             let screen = document.getElementById("recognized-screen");
             screen.classList.add("active")
             await setDataBase(labels.id, 2)
+            setTimeout(async () => {
+              await getVideo(true)
+            }, 3000);
             setTimeout(() => {
               handleImage()
             }, 10000);
             break
           case 2:
+            await stopVideo()
             let element2 = document.getElementById("name");
             element2.classList.add("active")
             let screen2 = document.getElementById("recognized-screen");
@@ -112,6 +147,9 @@ function FaceIndentify() {
             const name2 = `Volte sempre ${result?._label}`
             document.getElementById("name").innerHTML = name2;
             await setDataBase(labels.id, 1)
+            setTimeout(async () => {
+              await getVideo(true)
+            }, 5000);
             setTimeout(() => {
               handleImage()
             }, 10000);
@@ -135,7 +173,7 @@ function FaceIndentify() {
       faceapi.nets.faceExpressionNet.loadFromUri("/models"),
       faceapi.nets.ageGenderNet.loadFromUri("/models"),
       faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-      getVideo()
+      getVideo(false)
     ])
   }
 

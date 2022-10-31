@@ -29,7 +29,7 @@ export const getDatabase = async (docRef) => {
 
 
 export const setDataBase = async (id, type) => {
-    const userRef = doc(db, "detectedPeople", id);
+    const userRef = doc(db, "people", id);
     await updateDoc(userRef, {
         "type": type,
     });

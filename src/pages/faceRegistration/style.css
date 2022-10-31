@@ -1,88 +1,172 @@
 *,
 *:before,
 *:after {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .form-registration {
-    width: 95%;
-    background-color: rgba(255, 255, 255, 0.13);
-    position: absolute;
-    transform: translate(-50%, -50%);
-    top: 60%;
-    left: 50%;
-    border-radius: 10px;
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
-    padding: 50px 30%;
+  position: absolute;
+  left: 0;
+  padding-left: 1.3em;
+  padding-right: 1.3em;
+  top: 0;
+  padding: 10%;
+  background: white;
+  height: 100vh;
+  width: 50vw;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .form-registration * {
-    color: #000000;
-    letter-spacing: 0.5px;
-    outline: none;
-    border: none;
-}
-
-@media (prefers-color-scheme: dark) {
-    .form-registration * {
-        color: #ffffff;
-    }
+  color: #000000;
+  letter-spacing: 0.5px;
+  outline: none;
+  border: none;
 }
 
 .form-registration h3 {
-    font-size: 32px;
-    font-weight: 500;
-    line-height: 42px;
-    text-align: center;
-}
-
-@media (max-width:480px) {
-    .form-registration {
-        width: 400px;
-        top: 50%;
-        padding: 50px 35px;
-    }
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 42px;
+  color: #080710;
+  text-align: center;
 }
 
 .label-registration {
-    display: block;
-    margin-top: 30px;
-    font-size: 16px;
-    font-weight: 500;
+  display: block;
+  margin-top: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
 }
 
-.input-registration  {
-    display: block;
-    height: 50px;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.07);
-    border-radius: 3px;
-    padding: 0 10px;
-    margin-top: 8px;
-    font-size: 14px;
-    font-weight: 300;
+.input-registration {
+  display: block;
+  height: 50px;
+  width: 100%;
+  border-radius: 3px;
+  padding: 0 0 10px 10px;
+  margin-top: 8px;
+  font-weight: 300;
+  font-size: 1.2rem;
+  border: none;
+  border-bottom: solid 1px #000;
+  outline: none;
+}
+
+.input-registration::placeholder,
+.input-registration::placeholder {
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+}
+
+.input-registration:hover::placeholder,
+.input-registration:hover::placeholder {
+  color: #000;
 }
 
 ::placeholder {
-    color: #1b1b1b;
+  color: #1b1b1b;
 }
 
 @media (prefers-color-scheme: dark) {
-    ::placeholder {
-        color: #e5e5e5;
-    }
+  ::placeholder {
+    color: #e5e5e5;
+  }
 }
 
 .button {
+  margin-top: 50px;
+  width: 100%;
+  background-color: #080710;
+  color: #ffffff;
+  padding: 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.25s;
+}
+
+.button:hover {
+  background: #ffffff;
+  color: #080710;
+  letter-spacing: 3px;
+  border: 1px solid #080710;
+}
+
+.social {
+  margin-top: 30px;
+  display: flex;
+}
+
+.social div {
+  width: 150px;
+  border-radius: 3px;
+  padding: 5px 10px 10px 5px;
+  background-color: rgba(255, 255, 255, 0.27);
+  color: #150f03;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .social div {
+    color: #eaf0fb;
+  }
+
+  body {
+    background: #000;
+  }
+}
+
+.social div:hover {
+  background-color: rgba(255, 255, 255, 0.47);
+}
+
+.social .fb {
+  margin-left: 25px;
+}
+
+.social i {
+  margin-right: 4px;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+@media (max-width: 991px) {
+  .form-registration {
+    padding-top: 100px;
+    width: 100vw;
+  }
+  .camera-container {
+    width: 400px !important ;
+    position: absolute !important;
+    right: 0 !important;
+  }
+  .list-imgs {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    justify-content: start !important;
+    bottom: -17em;
+  }
+  .image-preview {
+    margin-right: 5px;
+    margin-top: 20px;
+    max-width: 130px;
+  }
+  .button-secondary {
     margin-top: 50px;
     width: 100%;
-    background-color: #ffffff;
-    color: #080710;
     padding: 15px 0;
     font-size: 18px;
     font-weight: 600;
@@ -90,46 +174,69 @@
     cursor: pointer;
     text-align: center;
     transition: 0.25s;
+    background: #ffffff;
+    color: #080710;
+    border: 1px solid #080710;
+  }
+  .camera-container .react-html5-camera-photo {
+    transform: scale(4.5) !important;
+  }
+  .camera-container .title-camera {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    top: -14em;
+  }
+
+  .submit-img-container {
+    padding-left: 20px;
+    padding-right: 20px;
+    position: absolute;
+    width: 100%;
+    top: 19em;
+  }
+
+  .camera-container .title-camera h3 {
+    color: black !important;
+    background: white !important;
+    border-radius: 30px !important;
+  }
+  .camera-container #container-circles {
+    transform: scale(-0.3) !important;
+    bottom: 4em !important;
+  }
+  .back-button {
+    opacity: 1 !important;
+    position: absolute;
+    z-index: 1;
+    top: -10em;
+    right: 37px;
+    transform: scale(1.5);
+  }
 }
 
-.button:hover {
-    background: rgb(57, 19, 95);
-    color: white;
-    letter-spacing: 3px;
+.camera-container {
+  position: absolute;
+  right: -55em;
+}
+.list-imgs {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  bottom: -17em;
+}
+.image-preview {
+  max-width: 130px;
 }
 
-.social {
-    margin-top: 30px;
-    display: flex;
+
+
+.camera-container .title-camera h3 {
+  color: white;
 }
 
-.social div {
-    width: 150px;
-    border-radius: 3px;
-    padding: 5px 10px 10px 5px;
-    background-color: rgba(255, 255, 255, 0.27);
-    color: #150f03;
-    text-align: center;
-}
-
-@media (prefers-color-scheme: dark) {
-    .social div {
-        color: #eaf0fb;
-    }
-
-    body {
-        background: #000;
-    }
-}
-
-.social div:hover {
-    background-color: rgba(255, 255, 255, 0.47);
-}
-
-.social .fb {
-    margin-left: 25px;
-}
-
-.social i {
-    margin-right: 4px;
+.back-button {
+  opacity: 0;
 }

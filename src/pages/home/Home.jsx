@@ -1,9 +1,11 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
 import './style.css';
 import faceId from '../../assets/img/faceId.png'
 import { Link } from 'react-router-dom';
 
 function Home() {
+
   return (
     <div className='content'>
       <div className='text'>

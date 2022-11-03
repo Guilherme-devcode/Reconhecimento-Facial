@@ -180,6 +180,7 @@
   }
   .camera-container .react-html5-camera-photo {
     transform: scale(1.5) !important;
+    z-index: 0;
   }
   .camera-container .title-camera {
     position: absolute;
@@ -203,7 +204,12 @@
     background: white !important;
     border-radius: 30px !important;
   }
-
+  .camera-container #container-circles {
+    z-index: 1;
+    position: absolute;
+    transform: scale(-0.7) !important;
+    bottom: 2em !important;
+  }
   .back-button {
     opacity: 1 !important;
     position: absolute;

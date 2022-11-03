@@ -178,7 +178,7 @@
     color: #080710;
     border: 1px solid #080710;
   }
-  .camera-container .react-html5-camera-photo {
+  .camera-container .react-html5-camera-photo video{
     transform: scale(1.5) !important;
     z-index: 0;
   }

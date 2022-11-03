@@ -160,9 +160,10 @@
     bottom: 1em !important;
   }
   .image-preview {
-    margin-right: 5px;
-    margin-top: 20px;
-    max-width: 130px;
+    margin-right: 5px !important;
+    margin-top: 20px !important;
+    max-width: 130px !important;
+    max-height: 90px !important;
   }
   .button-secondary {
     margin-top: 50px;
@@ -178,7 +179,7 @@
     color: #080710;
     border: 1px solid #080710;
   }
-  .camera-container .react-html5-camera-photo video{
+  .camera-container .react-html5-camera-photo video {
     transform: scale(1.5) !important;
     z-index: 0;
   }
@@ -196,7 +197,7 @@
     padding-right: 20px;
     position: absolute;
     width: 100%;
-    top: 19em;
+    top: -14em;
   }
 
   .camera-container .title-camera h3 {
@@ -208,7 +209,7 @@
     z-index: 1;
     position: absolute;
     transform: scale(-0.7) !important;
-    bottom: 10em !important;
+    bottom: 14em !important;
   }
   .back-button {
     opacity: 1 !important;

@@ -208,13 +208,13 @@
     z-index: 1;
     position: absolute;
     transform: scale(-0.7) !important;
-    bottom: 14em !important;
+    bottom: 15.5em !important;
   }
   .back-button {
     opacity: 1 !important;
     position: absolute;
     z-index: 1;
-    top: -10em;
+    top: 1em;
     right: 37px;
     transform: scale(1.5);
   }

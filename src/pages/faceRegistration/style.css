@@ -203,10 +203,7 @@
     background: white !important;
     border-radius: 30px !important;
   }
-  .camera-container #container-circles {
-    transform: scale(-0.3) !important;
-    bottom: 4em !important;
-  }
+
   .back-button {
     opacity: 1 !important;
     position: absolute;

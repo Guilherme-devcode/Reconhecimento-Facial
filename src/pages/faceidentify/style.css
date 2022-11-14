@@ -29,6 +29,9 @@
   height: 100vh;
   background: black;
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .loading-background.display-none {
@@ -230,7 +233,7 @@
   position: absolute;
   z-index: 1;
   filter: invert(100%);
-  top: 300px;
+  top: 50%;
   width: 140px;
 }
 

@@ -59,7 +59,8 @@ function FaceIndentify() {
 
 
   const loadLabels = async () => {
-    const result = await getDatabase("people")
+    const peoplesStorage = sessionStorage.getItem('people');
+    const result = JSON.parse(peoplesStorage);
     const storage = getStorage();
     const labels = result.map(m => m.name)
     return Promise.all(labels.map(async label => {
@@ -118,7 +119,8 @@ function FaceIndentify() {
         handleImage()
       }
       setTimeout(async () => {
-        const resultDb = await getDatabase("people")
+        const peoplesStorage = sessionStorage.getItem('people');
+        const resultDb = JSON.parse(peoplesStorage);
         const labels = resultDb.find(label => label.name === result?._label);
         let typeLabel = labels?.type;
         switch (typeLabel) {

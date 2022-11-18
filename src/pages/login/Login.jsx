@@ -11,7 +11,6 @@ import { auth, getDatabase } from '../../firebase';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import { PuffLoader } from 'react-spinners';
 
-
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -65,7 +64,7 @@ function Login() {
                 <form className='form-login' onSubmit={handleSubmit}>
                     <input onChange={(e) => setEmail(e.target.value)} className='input-login' type="email" placeholder="E-mail"></input>
                     <input onChange={(e) => setPassword(e.target.value)} className='input-login' type="password" placeholder="Senha"></input>
-                    <button>Entrar</button>
+                    <button className='button'>Entrar</button>
                 </form>
             </div>
         </div>

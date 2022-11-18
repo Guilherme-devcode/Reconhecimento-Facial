@@ -224,6 +224,12 @@
   position: absolute;
   right: -55em;
 }
+.face-registration{
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
 .list-imgs {
   display: flex;
   width: 100%;

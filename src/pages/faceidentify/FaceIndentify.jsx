@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/heading-has-content */
 /* eslint-disable no-unused-vars */
@@ -8,13 +9,11 @@ import './style.css';
 import face from '../../assets/img/face.png'
 import { PuffLoader } from 'react-spinners';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { getDatabase, getDetectedFaces, setDataBase } from '../../firebase';
+import { setDataBase } from '../../firebase';
 import { fetchImage } from 'face-api.js';
 
 function FaceIndentify() {
   const videoRef = useRef()
-  const canvas = require("canvas");
-  const { Canvas, Image, ImageData } = canvas;
   const [loading, setLoading] = useState(true)
   let [isActive, setActive] = useState(true);
 
@@ -27,8 +26,6 @@ function FaceIndentify() {
       let video = videoRef.current;
       video.srcObject = await stream;
       await video.play();
-      await handleImage()
-      await setLoading(false)
     } else {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 300 } })
       let video = videoRef.current;
@@ -38,31 +35,13 @@ function FaceIndentify() {
   };
 
 
-  const stopVideo = async () => {
-
-    var videoEl = videoRef.current;
-    // now get the steam 
-    const stream = videoEl.srcObject;
-    // now get all tracks
-    const tracks = stream.getTracks();
-    // now close each track by having forEach loop
-    if (tracks) {
-      tracks.forEach(function (track) {
-        // stopping every track
-        track.stop();
-      });
-      // assign null to srcObject of video
-      videoEl.srcObject = null;
-    }
-  };
-
 
 
   const loadLabels = async () => {
     const peoplesStorage = sessionStorage.getItem('people');
     const result = JSON.parse(peoplesStorage);
     const storage = getStorage();
-    const labels = result.map(m => m.name)
+    const labels = await result.map(m => m.name)
     return Promise.all(labels.map(async label => {
       for (let i = 1; i <= 3; i++) {
         const url = await getDownloadURL(ref(storage, `${label}/${i}.png`))
@@ -75,18 +54,13 @@ function FaceIndentify() {
         return new faceapi.LabeledFaceDescriptors(label, descriptions)
       }
     }))
-
   }
 
 
   const handleImage = async () => {
-    let screen = document.getElementById("recognized-screen");
-    let name = document.getElementById("name");
-    screen.classList.remove("active")
-    name.classList.remove("active")
-    const canvas = await faceapi.createCanvasFromMedia(videoRef.current)
+    setLoading(true);
+    const canvas = faceapi.createCanvasFromMedia(videoRef.current)
     const labels = await loadLabels()
-    // document.body.append(canvas)    
     const displaySize = { width: videoRef.current.width, height: videoRef.current.height }
     faceapi.matchDimensions(canvas, displaySize)
     const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi
@@ -102,21 +76,19 @@ function FaceIndentify() {
       faceMatcher.findBestMatch(d.descriptor)
     )
     await setTypes(results)
+    setLoading(false)
   }
 
   const setTypes = async (results) => {
+    console.log(results);
     if (results.length === 0) {
       const name = `Nenhum Rosto encontrado`
       document.getElementById("unknown").innerHTML = name;
-      setTimeout(() => {
-        handleImage()
-      }, 1000);
     }
     results.forEach(async (result) => {
       if (result._label === 'unknown') {
-        const name = `Não detectado`
+        const name = `Não reconhecido`
         document.getElementById("unknown").innerHTML = name;
-        handleImage()
       }
       setTimeout(async () => {
         const peoplesStorage = sessionStorage.getItem('people');
@@ -125,7 +97,6 @@ function FaceIndentify() {
         let typeLabel = labels?.type;
         switch (typeLabel) {
           case 1:
-            await stopVideo()
             const name = `Seja bem vindo ${result?._label}`
             document.getElementById("name").innerHTML = name;
             let element = document.getElementById("name");
@@ -133,15 +104,12 @@ function FaceIndentify() {
             let screen = document.getElementById("recognized-screen");
             screen.classList.add("active")
             await setDataBase(labels.id, 2)
-            setTimeout(async () => {
-              await getVideo(true)
-            }, 3000);
             setTimeout(() => {
-              handleImage()
-            }, 10000);
+              screen.classList.remove("active")
+              name.classList.remove("active")
+            }, 3000);
             break
           case 2:
-            await stopVideo()
             let element2 = document.getElementById("name");
             element2.classList.add("active")
             let screen2 = document.getElementById("recognized-screen");
@@ -149,12 +117,10 @@ function FaceIndentify() {
             const name2 = `Volte sempre ${result?._label}`
             document.getElementById("name").innerHTML = name2;
             await setDataBase(labels.id, 1)
-            setTimeout(async () => {
-              await getVideo(true)
-            }, 5000);
             setTimeout(() => {
-              handleImage()
-            }, 10000);
+              screen2.classList.remove("active")
+              name2.classList.remove("active")
+            }, 3000);
             break
           default:
         }
@@ -163,6 +129,9 @@ function FaceIndentify() {
   }
 
 
+  useEffect(() => {
+    loadModels();
+  }, []);
 
 
 
@@ -175,13 +144,11 @@ function FaceIndentify() {
       faceapi.nets.faceExpressionNet.loadFromUri("/models"),
       faceapi.nets.ageGenderNet.loadFromUri("/models"),
       faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-      getVideo(false)
+      await getVideo(false),
+      setLoading(false)
     ])
   }
 
-  useEffect(() => {
-    loadModels()
-  })
 
 
   return (
@@ -213,6 +180,7 @@ function FaceIndentify() {
           <div id='recognized-screen' className='recognized-screen'>
             <h3 id="name" className="name"></h3>
           </div>
+          <div onClick={handleImage} className='button' role="button">Reconhecer</div>
         </div>
       </div>
     </div >

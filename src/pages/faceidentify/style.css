@@ -233,7 +233,7 @@
   position: absolute;
   z-index: 1;
   filter: invert(100%);
-  top: 50%;
+  top: 40%;
   width: 140px;
 }
 

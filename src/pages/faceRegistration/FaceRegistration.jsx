@@ -1,11 +1,19 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable jsx-a11y/heading-has-content */
+/* eslint-disable no-unused-vars */
+
 import { addDoc, collection, getFirestore } from 'firebase/firestore';
 import React, { useState } from 'react'
-import { app, storage } from '../../firebase';
+import { app, getDatabase, storage } from '../../firebase';
 import './style.css';
 import { Camera, FACING_MODES } from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { PuffLoader } from 'react-spinners';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function FaceRegistration() {
     const [cpf, setCpf] = useState("");
@@ -19,7 +27,9 @@ function FaceRegistration() {
     const showCapture = () => setShowCamera(true)
     const hideCaputure = () => setShowCamera(false)
     const [listPhotos, setListPhotos] = useState([])
-
+    const [loading, setLoading] = useState(false)
+    const registerSuccess = () => toast("Cadastrado com Sucesso!");
+    const registerError = () => toast("Erro ao Cadastrar");
 
     async function createUser() {
         await addDoc(userCollectionRef, {
@@ -32,7 +42,31 @@ function FaceRegistration() {
         })
     }
 
+    const loadLabels = async () => {
+        const result = await getDatabase("people")
+        const storage = getStorage();
+        const listPeople = []
+        for (let i = 0; i < result.length; i++) {
+            const numberOfImagesInStorage = [1, 2, 3]
+            const urls = await Promise.all(numberOfImagesInStorage.map(item => getDownloadURL(ref(storage, `${result[i].name}/${item}.png`))))
+            const people = {
+                name: result[i].name,
+                type: result[i].type,
+                id: result[i].id,
+                cpf: result[i].cpf,
+                email: result[i].email,
+                date: result[i].date,
+                area: result[i].area,
+                images: urls,
+            }
+            listPeople.push(people);
+        }
+        sessionStorage.setItem("people", JSON.stringify(listPeople))
+    }
+
+
     async function handleUpload() {
+        setLoading(true)
         const files = listPhotos
         if (!files) return
         await files.map(async file => {
@@ -47,15 +81,20 @@ function FaceRegistration() {
                             "state_changed",
                             async snapshot => {
                                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                                console.log(progress);
-                                hideCaputure()
-                                setListPhotos([])
-                                setArea('')
-                                setName('')
-                                setEmail('')
-                                setCpf('')
+                                if (progress === 100) {
+                                    hideCaputure()
+                                    setListPhotos([])
+                                    setArea('')
+                                    setName('')
+                                    setEmail('')
+                                    setCpf('')
+                                    await loadLabels();
+                                    setLoading(false);
+                                    registerSuccess();
+                                }
                             },
                             error => {
+                                registerError()
                                 console.log(error);
                             },
                         )
@@ -66,8 +105,8 @@ function FaceRegistration() {
     }
 
     function ImgsList() {
-        const test = [1, 2, 3, 4]
-        const listItems = test.map((img) => {
+        const imgs = [1, 2, 3, 4]
+        const listItems = imgs.map((img) => {
             <li>{img}</li>
         })
         return (
@@ -79,6 +118,8 @@ function FaceRegistration() {
 
     return (
         <div className='face-registration'>
+            <ToastContainer />
+            <div className={loading ? "loading-background" : "loading-background display-none"}><PuffLoader className='loading' color={'#fff'} loading={loading} size={100} /></div>
             <form className='form-registration'>
                 <h3>Cadastro Facial</h3>
                 <label className='label-registration' htmlFor='name'>Nome completo</label>

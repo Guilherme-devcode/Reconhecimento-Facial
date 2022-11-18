@@ -36,6 +36,46 @@
   color: #080710;
   text-align: center;
 }
+.form-registration .select-area {
+  width: 100%;
+  border: 0;
+  margin-top: 50px;
+}
+.form-registration .select-area .css-319lph-ValueContainer {
+  padding: 0 !important;
+}
+.form-registration .select-area .react-select__control {
+  width: 100%;
+  border: 0 !important;
+
+  border-bottom: 1px solid #080710 !important;
+}
+
+.form-registration .select-area .react-select__control {
+  width: 100%;
+  border: 0 !important;
+  border-bottom: 1px solid #080710 !important;
+}
+.form-registration .select-area .react-select__control .css-qc6sy-singleValue {
+  opacity: 0.5 !important;
+  padding: 0 0 10px 10px;
+  transition: all 0.3s ease !important;
+  font-size: 1.2rem !important;
+
+}
+.form-registration .select-area .react-select__control .css-qc6sy-singleValue:hover {
+  opacity: 1 !important;
+}
+
+.form-registration .placeholder-select{
+  opacity: 0.5 !important;
+  transition: all 0.3s ease !important;
+  font-size: 1.2rem !important;
+
+}
+.form-registration .placeholder-select:hover{
+  opacity: 1 !important;
+}
 
 .label-registration {
   display: block;
@@ -224,7 +264,7 @@
   position: absolute;
   right: -55em;
 }
-.face-registration{
+.face-registration {
   position: relative;
   width: 100vw;
   height: 100vh;

@@ -41,7 +41,7 @@ function FaceIndentify() {
     const peoplesStorage = sessionStorage.getItem('people');
     const result = JSON.parse(peoplesStorage);
     const storage = getStorage();
-    const labels = await result.map(m => m.name)
+    const labels = await result.map(m => m.cpf)
     return Promise.all(labels.map(async label => {
       for (let i = 1; i <= 3; i++) {
         const url = await getDownloadURL(ref(storage, `${label}/${i}.png`))
@@ -80,7 +80,6 @@ function FaceIndentify() {
   }
 
   const setTypes = async (results) => {
-    console.log(results);
     if (results.length === 0) {
       const name = `Nenhum Rosto encontrado`
       document.getElementById("unknown").innerHTML = name;
@@ -93,11 +92,11 @@ function FaceIndentify() {
       setTimeout(async () => {
         const peoplesStorage = sessionStorage.getItem('people');
         const resultDb = JSON.parse(peoplesStorage);
-        const labels = resultDb.find(label => label.name === result?._label);
+        const labels = resultDb.find(label => label.cpf === result?._label);
         let typeLabel = labels?.type;
         switch (typeLabel) {
           case 1:
-            const name = `Seja bem vindo ${result?._label}`
+            const name = `Seja bem vindo ${labels?.name}`
             document.getElementById("name").innerHTML = name;
             let element = document.getElementById("name");
             element.classList.add("active")
@@ -114,7 +113,7 @@ function FaceIndentify() {
             element2.classList.add("active")
             let screen2 = document.getElementById("recognized-screen");
             screen2.classList.add("active")
-            const name2 = `Volte sempre ${result?._label}`
+            const name2 = `Volte sempre ${labels?.name}`
             document.getElementById("name").innerHTML = name2;
             await setDataBase(labels.id, 1)
             setTimeout(() => {

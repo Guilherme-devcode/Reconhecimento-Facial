@@ -24,7 +24,7 @@ function Login() {
         const listPeople = []
         for (let i = 0; i < result.length; i++) {
             const numberOfImagesInStorage = [1, 2, 3]
-            const urls = await Promise.all(numberOfImagesInStorage.map(item => getDownloadURL(ref(storage, `${result[i].name}/${item}.png`))))
+            const urls = await Promise.all(numberOfImagesInStorage.map(item => getDownloadURL(ref(storage, `${result[i].cpf}/${item}.png`))))
             const people = {
                 name: result[i].name,
                 type: result[i].type,

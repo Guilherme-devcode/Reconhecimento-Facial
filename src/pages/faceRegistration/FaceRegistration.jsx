@@ -4,7 +4,7 @@
 /* eslint-disable no-unused-vars */
 
 import { addDoc, collection, getFirestore } from 'firebase/firestore';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { app, getDatabase, storage } from '../../firebase';
 import './style.css';
 import { Camera, FACING_MODES } from "react-html5-camera-photo";
@@ -14,6 +14,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { PuffLoader } from 'react-spinners';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Select from 'react-select';
 
 function FaceRegistration() {
     const [cpf, setCpf] = useState("");
@@ -30,6 +31,18 @@ function FaceRegistration() {
     const [loading, setLoading] = useState(false)
     const registerSuccess = () => toast("Cadastrado com Sucesso!");
     const registerError = () => toast("Erro ao Cadastrar");
+    const [options, setOptions] = useState([])
+
+    const styleSelect = {
+        control: (base, state) => ({
+            ...base,
+            border: "0 !important",
+            boxShadow: "0 !important",
+            "&:hover": {
+                border: "0 !important",
+            }
+        })
+    };
 
     async function createUser() {
         await addDoc(userCollectionRef, {
@@ -42,13 +55,33 @@ function FaceRegistration() {
         })
     }
 
+    async function loadAreas() {
+        setLoading(true)
+        const result = await getDatabase("areas")
+        const areas = result.map((x) => {
+            const area = {
+                label: x.name,
+                value: x.id
+            }
+            return area
+        })
+        setOptions(areas)
+        setLoading(false)
+    }
+
+    useEffect(() => {
+
+        loadAreas()
+    }, [])
+
+
     const loadLabels = async () => {
         const result = await getDatabase("people")
         const storage = getStorage();
         const listPeople = []
         for (let i = 0; i < result.length; i++) {
             const numberOfImagesInStorage = [1, 2, 3]
-            const urls = await Promise.all(numberOfImagesInStorage.map(item => getDownloadURL(ref(storage, `${result[i].name}/${item}.png`))))
+            const urls = await Promise.all(numberOfImagesInStorage.map(item => getDownloadURL(ref(storage, `${result[i].cpf}/${item}.png`))))
             const people = {
                 name: result[i].name,
                 type: result[i].type,
@@ -75,7 +108,7 @@ function FaceRegistration() {
                     .then(res => res.blob())
                     .then(blob => {
                         const file = new File([blob], "File name", { type: "image/png" })
-                        const storageRef = ref(storage, `${name}/${i}.png`)
+                        const storageRef = ref(storage, `${cpf}/${i}.png`)
                         const uploadTask = uploadBytesResumable(storageRef, file)
                         uploadTask.on(
                             "state_changed",
@@ -88,9 +121,6 @@ function FaceRegistration() {
                                     setName('')
                                     setEmail('')
                                     setCpf('')
-                                    await loadLabels();
-                                    setLoading(false);
-                                    registerSuccess();
                                 }
                             },
                             error => {
@@ -102,6 +132,9 @@ function FaceRegistration() {
             }
         })
         await createUser()
+        await loadLabels();
+        setLoading(false);
+        registerSuccess();
     }
 
     function ImgsList() {
@@ -128,8 +161,15 @@ function FaceRegistration() {
                 <input className='input-registration' type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} placeholder="CPF" id="cpf"></input>
                 <label className='label-registration' htmlFor="cpf">Email</label>
                 <input className='input-registration' type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" id="cpf"></input>
-                <label className='label-registration' htmlFor="cpf">Area</label>
-                <input className='input-registration' type="text" value={area} onChange={(e) => setArea(e.target.value)} placeholder="Area" id="cpf"></input>
+                <Select
+                    styles={styleSelect}
+                    onChange={(chioce) => setArea(chioce)}
+                    options={options}
+
+                    placeholder={<div className='placeholder-select'>Selecione a Area</div>}
+                    className="select-area"
+                    classNamePrefix="react-select"
+                />
                 <div onClick={showCapture} className={name && cpf && email && area ? 'button' : 'button disabled'} role="button">Enviar Fotos</div>
                 {showCamera ?
                     <div className="camera-container">

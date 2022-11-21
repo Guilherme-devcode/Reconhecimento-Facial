@@ -15,8 +15,12 @@ import { fetchImage } from 'face-api.js';
 function FaceIndentify() {
   const videoRef = useRef()
   const [loading, setLoading] = useState(true)
+  const [unknown, setUnknown] = useState('')
   let [isActive, setActive] = useState(true);
-
+  const types = {
+    checkIn: 1,
+    checkOut: 2,
+  }
 
 
 
@@ -82,49 +86,47 @@ function FaceIndentify() {
   const setTypes = async (results) => {
     if (results.length === 0) {
       const name = `Nenhum Rosto encontrado`
-      document.getElementById("unknown").innerHTML = name;
+      setUnknown(name)
     }
     results.forEach(async (result) => {
       if (result._label === 'unknown') {
         const name = `Não reconhecido`
-        document.getElementById("unknown").innerHTML = name;
+        setUnknown(name)
       }
-      setTimeout(async () => {
-        const peoplesStorage = sessionStorage.getItem('people');
-        const resultDb = JSON.parse(peoplesStorage);
-        const labels = resultDb.find(label => label.cpf === result?._label);
-        let typeLabel = labels?.type;
-        switch (typeLabel) {
-          case 1:
-            const name = `Seja bem vindo ${labels?.name}`
-            document.getElementById("name").innerHTML = name;
-            let element = document.getElementById("name");
-            element.classList.add("active")
-            let screen = document.getElementById("recognized-screen");
-            screen.classList.add("active")
-            await setDataBase(labels.id, 2)
-            setTimeout(() => {
-              screen.classList.remove("active")
-              name.classList.remove("active")
-            }, 3000);
-            break
-          case 2:
-            let element2 = document.getElementById("name");
-            element2.classList.add("active")
-            let screen2 = document.getElementById("recognized-screen");
-            screen2.classList.add("active")
-            const name2 = `Volte sempre ${labels?.name}`
-            document.getElementById("name").innerHTML = name2;
-            await setDataBase(labels.id, 1)
-            setTimeout(() => {
-              screen2.classList.remove("active")
-              name2.classList.remove("active")
-            }, 3000);
-            break
-          default:
-        }
-      })
-    }, 2000);
+      const peoplesStorage = sessionStorage.getItem('people');
+      const resultDb = JSON.parse(peoplesStorage);
+      const labels = resultDb.find(label => label.cpf === result?._label);
+      let typeLabel = labels?.type;
+      switch (typeLabel) {
+        case types.checkIn:
+          const name = `Seja bem vindo ${labels?.name}`
+          document.getElementById("name").innerHTML = name;
+          let element = document.getElementById("name");
+          element.classList.add("active")
+          let screen = document.getElementById("recognized-screen");
+          screen.classList.add("active")
+          await setDataBase(labels.id, types.checkOut)
+          setTimeout(() => {
+            screen.classList.remove("active")
+            name.classList.remove("active")
+          }, 3000);
+          break
+        case types.checkOut:
+          let element2 = document.getElementById("name");
+          element2.classList.add("active")
+          let screen2 = document.getElementById("recognized-screen");
+          screen2.classList.add("active")
+          const name2 = `Volte sempre ${labels?.name}`
+          document.getElementById("name").innerHTML = name2;
+          await setDataBase(labels.id, types.checkIn)
+          setTimeout(() => {
+            screen2.classList.remove("active")
+            name2.classList.remove("active")
+          }, 3000);
+          break
+        default:
+      }
+    })
   }
 
 
@@ -175,7 +177,7 @@ function FaceIndentify() {
             ref={videoRef}
             muted>
           </video>
-          <h3 id="unknown" className="unknown"></h3>
+          <h3 id="unknown" className="unknown">{unknown}</h3>
           <div id='recognized-screen' className='recognized-screen'>
             <h3 id="name" className="name"></h3>
           </div>

@@ -10,12 +10,15 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, getDatabase } from '../../firebase';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import { PuffLoader } from 'react-spinners';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false)
+    const loginError = () => toast("Erro ao Entrar");
 
     const loadLabels = async () => {
         setLoading(true)
@@ -45,13 +48,19 @@ function Login() {
         onLogin();
     };
     async function onLogin() {
-        await signInWithEmailAndPassword(auth, email, password)
-        await loadLabels();
-        setLoading(false)
-        navigate("/");
+        await signInWithEmailAndPassword(auth, email, password).then(async (e) => {
+            await loadLabels();
+            setLoading(false)
+            navigate("/");
+        })
+            .catch((error) => {
+                loginError()
+            })
+
     }
     return (
         <div className='login'>
+            <ToastContainer />
             <div className={loading ? "loading-background" : "loading-background display-none"}><PuffLoader className='loading' color={'#fff'} loading={loading} size={100} /></div>
             <div className="image">
                 <img className='logo' src={faceId} ></img>

@@ -1,6 +1,6 @@
 
 import { initializeApp } from "firebase/app";
-import { getStorage } from "firebase/storage"
+import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import { collection, getDocs, getFirestore, doc, updateDoc} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -35,7 +35,27 @@ export const setDataBase = async (id, type) => {
     });
 }
 
-
+export const loadPeopleFireStore = async () => {
+    const result = await getDatabase("people")
+    const storage = getStorage();
+    const listPeople = []
+    for (let i = 0; i < result.length; i++) {
+      const numberOfImagesInStorage = [1, 2, 3]
+      const urls = await Promise.all(numberOfImagesInStorage.map(item => getDownloadURL(ref(storage, `${result[i].cpf}/${item}.png`))))
+      const people = {
+        name: result[i].name,
+        type: result[i].type,
+        id: result[i].id,
+        cpf: result[i].cpf,
+        email: result[i].email,
+        date: result[i].date,
+        area: result[i].area,
+        images: urls,
+      }
+      listPeople.push(people);
+    }
+    sessionStorage.setItem("people", JSON.stringify(listPeople))
+  }
 
 
 export const storage = getStorage(app)

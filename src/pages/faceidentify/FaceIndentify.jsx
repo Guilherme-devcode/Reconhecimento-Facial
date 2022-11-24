@@ -9,7 +9,7 @@ import './style.css';
 import face from '../../assets/img/face.png'
 import { PuffLoader } from 'react-spinners';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { setDataBase } from '../../firebase';
+import { getDatabase, loadPeopleFireStore, setDataBase } from '../../firebase';
 import { fetchImage } from 'face-api.js';
 
 function FaceIndentify() {
@@ -106,6 +106,7 @@ function FaceIndentify() {
           let screen = document.getElementById("recognized-screen");
           screen.classList.add("active")
           await setDataBase(labels.id, types.checkOut)
+          await loadPeopleFireStore();
           setTimeout(() => {
             screen.classList.remove("active")
             name.classList.remove("active")
@@ -119,6 +120,7 @@ function FaceIndentify() {
           const name2 = `Volte sempre ${labels?.name}`
           document.getElementById("name").innerHTML = name2;
           await setDataBase(labels.id, types.checkIn)
+          await loadPeopleFireStore();
           setTimeout(() => {
             screen2.classList.remove("active")
             name2.classList.remove("active")
@@ -146,6 +148,7 @@ function FaceIndentify() {
       faceapi.nets.ageGenderNet.loadFromUri("/models"),
       faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
       await getVideo(false),
+      await loadPeopleFireStore(),
       setLoading(false)
     ])
   }

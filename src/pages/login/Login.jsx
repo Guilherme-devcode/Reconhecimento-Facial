@@ -7,7 +7,7 @@ import faceId from '../../assets/img/faceId.png'
 import LogotipoRed from '../../assets/img/LogotipoRed.png'
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth, getDatabase } from '../../firebase';
+import { auth, getDatabase, loadPeopleFireStore } from '../../firebase';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import { PuffLoader } from 'react-spinners';
 import { toast, ToastContainer } from 'react-toastify';
@@ -20,28 +20,6 @@ function Login() {
     const [loading, setLoading] = useState(false)
     const loginError = () => toast("Erro ao Entrar");
 
-    const loadLabels = async () => {
-        setLoading(true)
-        const result = await getDatabase("people")
-        const storage = getStorage();
-        const listPeople = []
-        for (let i = 0; i < result.length; i++) {
-            const numberOfImagesInStorage = [1, 2, 3]
-            const urls = await Promise.all(numberOfImagesInStorage.map(item => getDownloadURL(ref(storage, `${result[i].cpf}/${item}.png`))))
-            const people = {
-                name: result[i].name,
-                type: result[i].type,
-                id: result[i].id,
-                cpf: result[i].cpf,
-                email: result[i].email,
-                date: result[i].date,
-                area: result[i].area,
-                images: urls,
-            }
-            listPeople.push(people);
-        }
-        sessionStorage.setItem("people", JSON.stringify(listPeople))
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -49,7 +27,8 @@ function Login() {
     };
     async function onLogin() {
         await signInWithEmailAndPassword(auth, email, password).then(async (e) => {
-            await loadLabels();
+            setLoading(true)
+            await loadPeopleFireStore();
             setLoading(false)
             navigate("/");
         })

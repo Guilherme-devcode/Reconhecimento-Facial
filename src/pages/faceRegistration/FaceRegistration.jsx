@@ -15,6 +15,7 @@ import { PuffLoader } from 'react-spinners';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select';
+import { cpfMask } from '../../common/masksInput';
 
 function FaceRegistration() {
     const [cpf, setCpf] = useState("");
@@ -31,7 +32,10 @@ function FaceRegistration() {
     const [loading, setLoading] = useState(false)
     const registerSuccess = () => toast("Cadastrado com Sucesso!");
     const registerError = () => toast("Erro ao Cadastrar");
+    const registerErrorSameCpf = () => toast("Usuário já cadastrado");
     const [options, setOptions] = useState([])
+    const [people, setPeople] = useState([])
+
 
     const styleSelect = {
         control: (base, state) => ({
@@ -70,39 +74,14 @@ function FaceRegistration() {
     }
 
     useEffect(() => {
-
         loadAreas()
     }, [])
 
 
-    const loadLabels = async () => {
-        const result = await getDatabase("people")
-        const storage = getStorage();
-        const listPeople = []
-        for (let i = 0; i < result.length; i++) {
-            const numberOfImagesInStorage = [1, 2, 3]
-            const urls = await Promise.all(numberOfImagesInStorage.map(item => getDownloadURL(ref(storage, `${result[i].cpf}/${item}.png`))))
-            const people = {
-                name: result[i].name,
-                type: result[i].type,
-                id: result[i].id,
-                cpf: result[i].cpf,
-                email: result[i].email,
-                date: result[i].date,
-                area: result[i].area,
-                images: urls,
-            }
-            listPeople.push(people);
-        }
-        sessionStorage.setItem("people", JSON.stringify(listPeople))
-    }
-
-
     async function handleUpload() {
-        setLoading(true)
         const files = listPhotos
         if (!files) return
-        await files.map(async file => {
+        files.map(async file => {
             for (let i = 1; i <= 3; i++) {
                 fetch(file.url)
                     .then(res => res.blob())
@@ -131,10 +110,20 @@ function FaceRegistration() {
                     })
             }
         })
-        await createUser()
-        await loadLabels();
+    }
+
+    async function saveUser() {
+        setLoading(true);
+        setPeople(await getDatabase("people"));
+        const result = people.find(person => person.cpf === cpf)
+        if (!result) {
+            await handleUpload();
+            await createUser();
+            registerSuccess();
+        } else {
+            registerErrorSameCpf();
+        }
         setLoading(false);
-        registerSuccess();
     }
 
     function ImgsList() {
@@ -147,8 +136,6 @@ function FaceRegistration() {
         );
     }
 
-
-
     return (
         <div className='face-registration'>
             <ToastContainer />
@@ -158,9 +145,9 @@ function FaceRegistration() {
                 <label className='label-registration' htmlFor='name'>Nome completo</label>
                 <input className='input-registration' type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nome completo" id="name"></input>
                 <label className='label-registration' htmlFor="cpf">CPF</label>
-                <input className='input-registration' type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} placeholder="CPF" id="cpf"></input>
+                <input maxLength='14' className='input-registration' type="text" value={cpf} onChange={(e) => setCpf(cpfMask(e.target.value))} placeholder="CPF" id="cpf"></input>
                 <label className='label-registration' htmlFor="cpf">Email</label>
-                <input className='input-registration' type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" id="cpf"></input>
+                <input type="email" className='input-registration' value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" id="cpf"></input>
                 <Select
                     styles={styleSelect}
                     onChange={(chioce) => setArea(chioce)}
@@ -200,7 +187,7 @@ function FaceRegistration() {
                             {listPhotos && listPhotos.map(img => <a href={img.url} download> <img className='image-preview' src={img.url}></img> </a>)}
                         </div>
                         <div className="submit-img-container">
-                            <div onClick={handleUpload} role="button" className={listPhotos.length === 3 ? 'button' : 'button disabled'}>Enviar</div>
+                            <div onClick={saveUser} role="button" className={listPhotos.length === 3 ? 'button' : 'button disabled'}>Enviar</div>
                         </div>
                     </div>
                     : null}

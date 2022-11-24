@@ -12,12 +12,15 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                localStorage.setItem('authUser', JSON.stringify(user))
                 setCurrentUser(user);
             } else {
+                localStorage.removeItem('authUser')
                 setCurrentUser(null);
             }
         });
-        if (currentUser === null) {
+       const userLocal = JSON.parse(localStorage.getItem('authUser'))
+        if (userLocal === null) {
             navigate("/Login")
         }
     }, [currentUser]);

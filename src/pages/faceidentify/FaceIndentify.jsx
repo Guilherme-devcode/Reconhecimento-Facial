@@ -171,6 +171,7 @@ function FaceIndentify() {
             src={face}>
           </img>
           <video
+            playsInline
             id='video'
             crossOrigin='anonymous'
             className='video'

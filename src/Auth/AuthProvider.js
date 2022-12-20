@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = React.createContext();
 
@@ -19,11 +19,12 @@ export const AuthProvider = ({ children }) => {
                 setCurrentUser(null);
             }
         });
-       const userLocal = JSON.parse(localStorage.getItem('authUser'))
-        if (userLocal === null) {
+        const userLocal = JSON.parse(localStorage.getItem('authUser'))
+        const expirationTime = (userLocal?.stsTokenManager?.expirationTime * 1000) - 60000
+        if (Date.now() >= expirationTime) {
             navigate("/Login")
         }
-    }, [currentUser]);
+    }, [currentUser, navigate]);
 
     return (
         <AuthContext.Provider value={{ currentUser }}>

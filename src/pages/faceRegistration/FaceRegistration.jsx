@@ -114,8 +114,9 @@ function FaceRegistration() {
 
     async function saveUser() {
         setLoading(true);
-        setPeople(await getDatabase("people"));
-        const result = people.find(person => person.cpf === cpf)
+        const peopleResultData = await getDatabase("people")
+        setPeople(peopleResultData);
+        const result = peopleResultData.find(person => person.cpf === cpf)
         if (!result) {
             await handleUpload();
             await createUser();
